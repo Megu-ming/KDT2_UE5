@@ -362,9 +362,9 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-KDT2/Binaries
-KDT2/Intermediate
-KDT2/Saved
-KDT2/Content/Developers
-KDT2/*.sln
-KDT2/.vsconfig
+Binaries
+Intermediate
+Content/Developers
+*.sln
+.vsconfig
+Saved
