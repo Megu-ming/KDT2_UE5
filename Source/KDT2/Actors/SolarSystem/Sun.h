@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/TimelineComponent.h"
+#include "Components/PointLightComponent.h"
 #include "Sun.generated.h"
 
 UCLASS()
@@ -37,9 +38,10 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* StaticMeshEarthComponent = nullptr;
-
 	UPROPERTY()
 	UTimelineComponent* SunPowerTimelineComponent = nullptr;
+	UPROPERTY(EditAnywhere)
+	UPointLightComponent* PointLight = nullptr;
 	UPROPERTY()
 	UMaterialInstanceDynamic* MID = nullptr;
 
