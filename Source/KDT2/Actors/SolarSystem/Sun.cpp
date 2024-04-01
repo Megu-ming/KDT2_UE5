@@ -21,7 +21,7 @@ ASun::ASun()
 	StaticMeshEarthComponent->SetupAttachment(SceneComponent);*/
 
 	{
-		static ConstructorHelpers::FObjectFinder<UStaticMesh> ObjectFinder(TEXT("/Script/Engine.StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
+		static ConstructorHelpers::FObjectFinder<UStaticMesh> ObjectFinder(TEXT("/Script/Engine.StaticMesh'/Engine/EditorMeshes/EditorSphere.EditorSphere'"));
 		ensure(ObjectFinder.Object);
 		StaticMeshSunComponent->SetStaticMesh(ObjectFinder.Object);
 	}
