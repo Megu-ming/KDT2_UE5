@@ -39,6 +39,20 @@ void APlanet::OnConstruction(const FTransform& Transform)
 	
 	CloudStaticMeshComponent->SetVisibility(bCloud);
 
+	const int32 NumberOfSatellite = SatelliteArray.Num();
+
+	for (int32 i = 0; i < NumberOfSatellite; ++i)
+	{
+		if (!SatelliteArray[i].ChildActorComponent)
+		{
+			SatelliteArray[i].Axis = NewObject<USceneComponent>(this);
+			SatelliteArray[i].Axis->RegisterComponent();
+			SatelliteArray[i].Axis->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::SnapToTargetIncludingScale);
+			SatelliteArray[i].ChildActorComponent = NewObject<UChildActorComponent>(this);
+			SatelliteArray[i].ChildActorComponent->RegisterComponent();
+			SatelliteArray[i].ChildActorComponent->AttachToComponent(SatelliteArray[i].Axis, FAttachmentTransformRules::SnapToTargetIncludingScale);
+		}
+	}
 }
 
 // Called when the game starts or when spawned
@@ -46,6 +60,11 @@ void APlanet::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void APlanet::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
 }
 
 // Called every frame
@@ -63,6 +82,14 @@ void APlanet::Tick(float DeltaTime)
 		const FRotator Rotator{ 0.,DeltaSpeed,0. };
 		const FQuat Quat = Rotator.Quaternion();
 		CloudStaticMeshComponent->AddLocalRotation(Quat);
+	}
+
+	for (auto& It : SatelliteArray)
+	{
+		const double DeltaSpeed = (DeltaTime * It.RotationSpeed);
+		const FRotator Rotator{ 0.,DeltaSpeed,0. };
+		const FQuat Quat = Rotator.Quaternion();
+		It.Axis->AddLocalRotation(Quat);
 	}
 }
 

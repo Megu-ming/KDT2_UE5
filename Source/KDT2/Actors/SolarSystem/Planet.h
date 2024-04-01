@@ -6,6 +6,22 @@
 #include "GameFramework/Actor.h"
 #include "Planet.generated.h"
 
+USTRUCT(BlueprintType)
+struct FSatellite
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USceneComponent* Axis;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UChildActorComponent* ChildActorComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	double RotationSpeed = 90.0;
+};
+
 UCLASS()
 class KDT2_API APlanet : public AActor
 {
@@ -19,6 +35,7 @@ protected:
 	virtual void OnConstruction(const FTransform& Transform) override;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:	
 	// Called every frame
@@ -47,9 +64,9 @@ protected:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<UChildActorComponent*> SatelliteArray;
+	TArray<FSatellite> SatelliteArray;
 
 protected:
 	UPROPERTY()
-	UMaterialInstanceDynamic* PlanetMaterialInstanceDynamic;
+	UMaterialInstanceDynamic* PlanetMaterialInstanceDynamic = nullptr;
 };
