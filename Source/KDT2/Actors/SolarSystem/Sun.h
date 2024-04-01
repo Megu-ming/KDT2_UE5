@@ -33,11 +33,11 @@ private:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* StaticMeshSunComponent = nullptr;
 
-	UPROPERTY(EditAnywhere)
+	/*UPROPERTY(EditAnywhere)
 	USceneComponent* SceneComponent = nullptr;
 
 	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* StaticMeshEarthComponent = nullptr;
+	UStaticMeshComponent* StaticMeshEarthComponent = nullptr;*/
 	UPROPERTY()
 	UTimelineComponent* SunPowerTimelineComponent = nullptr;
 	UPROPERTY(EditAnywhere)
@@ -45,11 +45,11 @@ private:
 	UPROPERTY()
 	UMaterialInstanceDynamic* MID = nullptr;
 
-	UPROPERTY(Category="Speed",EditAnywhere)
+	/*UPROPERTY(Category="Speed",EditAnywhere)
 	double EarthRotationSpeed = 20.0;
 	UPROPERTY(Category="Speed", EditAnywhere)
-	double SceneRotationSpeed = 80.0;
+	double SceneRotationSpeed = 80.0;*/
 
 	static inline UMaterial* SunMaterial = nullptr;
-	static inline UMaterial* EarthMaterial = nullptr;
+	/*static inline UMaterial* EarthMaterial = nullptr;*/
 };

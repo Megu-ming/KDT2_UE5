@@ -12,13 +12,13 @@ ASun::ASun()
 	bool bCDO = HasAnyFlags(EObjectFlags::RF_ClassDefaultObject);
 
 	StaticMeshSunComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshSun"));
-	StaticMeshEarthComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshEarth"));
-	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
+	/*StaticMeshEarthComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshEarth"));
+	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));*/
 	SunPowerTimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("SunPower Timeline"));
 	
 	SetRootComponent(StaticMeshSunComponent);
-	SceneComponent->SetupAttachment(StaticMeshSunComponent);
-	StaticMeshEarthComponent->SetupAttachment(SceneComponent);
+	/*SceneComponent->SetupAttachment(StaticMeshSunComponent);
+	StaticMeshEarthComponent->SetupAttachment(SceneComponent);*/
 
 	{
 		static ConstructorHelpers::FObjectFinder<UStaticMesh> ObjectFinder(TEXT("/Script/Engine.StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
@@ -31,7 +31,7 @@ ASun::ASun()
 		SunMaterial = ObjectFinder.Object;
 		StaticMeshSunComponent->SetMaterial(0, SunMaterial);
 	}
-	{
+	/*{
 		static ConstructorHelpers::FObjectFinder<UStaticMesh> ObjectFinder(TEXT("/Script/Engine.StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
 		ensure(ObjectFinder.Object);
 		StaticMeshEarthComponent->SetStaticMesh(ObjectFinder.Object);
@@ -43,7 +43,7 @@ ASun::ASun()
 
 		StaticMeshEarthComponent->SetRelativeLocation(FVector(200.f, 0, 0));
 		StaticMeshEarthComponent->SetRelativeScale3D(FVector(0.3f, 0.3f, 0.3f));
-	}
+	}*/
 
 	{
 		static ConstructorHelpers::FObjectFinder<UCurveFloat> ObjectFinder(TEXT("/Script/Engine.CurveFloat'/Game/KDT/Blueprint/SolarSystem/Curve_SunPower.Curve_SunPower'"));
@@ -87,8 +87,8 @@ void ASun::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	SceneComponent->AddRelativeRotation(FRotator(0, SceneRotationSpeed * DeltaTime, 0));
-	StaticMeshEarthComponent->AddRelativeRotation(FRotator(0, EarthRotationSpeed * DeltaTime, 0));
+	/*SceneComponent->AddRelativeRotation(FRotator(0, SceneRotationSpeed * DeltaTime, 0));
+	StaticMeshEarthComponent->AddRelativeRotation(FRotator(0, EarthRotationSpeed * DeltaTime, 0));*/
 }
 
 void ASun::OnSunPower(float InPower)
@@ -96,4 +96,3 @@ void ASun::OnSunPower(float InPower)
 	UE_LOG(LogTemp, Warning, TEXT("Power : %f"), InPower);
 	MID->SetScalarParameterValue(TEXT("Power"), InPower * 30.f);
 }
-
