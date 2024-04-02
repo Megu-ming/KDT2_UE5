@@ -9,7 +9,7 @@
 USTRUCT(BlueprintType)
 struct FSatellite
 {
-	GENERATED_BODY()
+	GENERATED_USTRUCT_BODY()
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -24,7 +24,7 @@ public:
 	void Create(class APlanet* InPlanet, FSatellite* InTemplate);
 	void Destroy();
 
-	bool operator==(const FSatellite& InOther)const
+	bool operator==(const FSatellite& InOther) const
 	{
 		return Axis == InOther.Axis;
 	}
@@ -35,15 +35,15 @@ class KDT2_API APlanet : public AActor
 {
 	friend struct FSatellite;
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	APlanet();
 
 protected:
 #if WITH_EDITOR
-	virtual void PreEditChange(FProperty* PropertyThatWillChange);
-	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangeEvent);
+	virtual void PreEditChange(FProperty* PropertyThatWillChange) override;
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 
 	TArray<FSatellite> Temp;
 #endif
@@ -54,13 +54,12 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void BeginDestroy() override;
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-
 protected:
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	USceneComponent* DefaultSceneRoot;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
@@ -76,16 +75,25 @@ protected:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	double PlanetRotationSpeed = 90.0;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	double CloudeRotationSpeed = 180.0;
+	double CloudRotationSpeed = 180.0;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bCloud = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bNightSide = false;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FSatellite> SatelliteArray;
 
-protected:
 	UPROPERTY()
-	UMaterialInstanceDynamic* PlanetMaterialInstanceDynamic = nullptr;
+	class ASun* Sun;
+
+protected:
+	void CalculateNightSide();
+	UPROPERTY()
+	UMaterialInstanceDynamic* PlanetMaterialInstanceDynamic;
 };
