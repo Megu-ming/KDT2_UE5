@@ -11,39 +11,21 @@ ASun::ASun()
 
 	bool bCDO = HasAnyFlags(EObjectFlags::RF_ClassDefaultObject);
 
-	StaticMeshSunComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshSun"));
-	/*StaticMeshEarthComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshEarth"));
-	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));*/
+	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	SunPowerTimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("SunPower Timeline"));
-	
-	SetRootComponent(StaticMeshSunComponent);
-	/*SceneComponent->SetupAttachment(StaticMeshSunComponent);
-	StaticMeshEarthComponent->SetupAttachment(SceneComponent);*/
+	SetRootComponent(StaticMeshComponent);
 
 	{
 		static ConstructorHelpers::FObjectFinder<UStaticMesh> ObjectFinder(TEXT("/Script/Engine.StaticMesh'/Engine/EditorMeshes/EditorSphere.EditorSphere'"));
 		ensure(ObjectFinder.Object);
-		StaticMeshSunComponent->SetStaticMesh(ObjectFinder.Object);
+		StaticMeshComponent->SetStaticMesh(ObjectFinder.Object);
 	}
 	{
 		static ConstructorHelpers::FObjectFinder<UMaterial> ObjectFinder(TEXT("/Script/Engine.Material'/Game/KDT/Blueprint/SolarSystem/MT_Sun.MT_Sun'"));
 		ensure(ObjectFinder.Object);
 		SunMaterial = ObjectFinder.Object;
-		StaticMeshSunComponent->SetMaterial(0, SunMaterial);
+		StaticMeshComponent->SetMaterial(0, SunMaterial);
 	}
-	/*{
-		static ConstructorHelpers::FObjectFinder<UStaticMesh> ObjectFinder(TEXT("/Script/Engine.StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
-		ensure(ObjectFinder.Object);
-		StaticMeshEarthComponent->SetStaticMesh(ObjectFinder.Object);
-	}
-	{
-		static ConstructorHelpers::FObjectFinder<UMaterial> ObjectFinder(TEXT("/Script/Engine.Material'/Game/KDT/Blueprint/SolarSystem/MT_Earth.MT_Earth'"));
-		EarthMaterial = ObjectFinder.Object;
-		StaticMeshEarthComponent->SetMaterial(0, EarthMaterial);
-
-		StaticMeshEarthComponent->SetRelativeLocation(FVector(200.f, 0, 0));
-		StaticMeshEarthComponent->SetRelativeScale3D(FVector(0.3f, 0.3f, 0.3f));
-	}*/
 
 	{
 		static ConstructorHelpers::FObjectFinder<UCurveFloat> ObjectFinder(TEXT("/Script/Engine.CurveFloat'/Game/KDT/Blueprint/SolarSystem/Curve_SunPower.Curve_SunPower'"));
@@ -61,7 +43,7 @@ ASun::ASun()
 		PointLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("Sun Light"));
 		PointLight->SetupAttachment(GetRootComponent());
 		PointLight->Intensity = 10.f;
-		PointLight->AttenuationRadius = 10000000.f;
+		PointLight->AttenuationRadius = 1000000000.f;
 		PointLight->bUseInverseSquaredFalloff = false;
 		PointLight->LightFalloffExponent = 0.0001f;
 	}
@@ -71,7 +53,7 @@ void ASun::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
-	MID = StaticMeshSunComponent->CreateDynamicMaterialInstance(0, SunMaterial);
+	MID = StaticMeshComponent->CreateDynamicMaterialInstance(0, SunMaterial);
 }
 
 // Called when the game starts or when spawned
@@ -94,5 +76,5 @@ void ASun::Tick(float DeltaTime)
 void ASun::OnSunPower(float InPower)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Power : %f"), InPower);
-	MID->SetScalarParameterValue(TEXT("Power"), InPower * 30.f);
+	MID->SetScalarParameterValue(TEXT("Power"), InPower * 50.f);
 }
