@@ -8,11 +8,16 @@ APlanet::APlanet()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
-	PlanetAxis = CreateDefaultSubobject<USceneComponent>(TEXT("PlanetAxis"));
-	PlanetStaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlanetStaticMeshComponent"));
-	CloudAxis = CreateDefaultSubobject<USceneComponent>(TEXT("CloudAxis"));
-	CloudStaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CloudStaticMeshComponent"));
+	{
+
+		DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
+		
+		PlanetAxis = CreateDefaultSubobject<USceneComponent>(TEXT("PlanetAxis"));
+		PlanetStaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlanetStaticMeshComponent"));
+		
+		CloudAxis = CreateDefaultSubobject<USceneComponent>(TEXT("CloudAxis"));
+		CloudStaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CloudStaticMeshComponent"));
+	}
 	SetRootComponent(DefaultSceneRoot);
 
 	PlanetAxis->SetupAttachment(GetRootComponent());
@@ -21,6 +26,7 @@ APlanet::APlanet()
 	CloudAxis->SetupAttachment(GetRootComponent());
 	CloudStaticMeshComponent->SetupAttachment(CloudAxis);
 	CloudStaticMeshComponent->SetRelativeScale3D(FVector(1.01, 1.01, 1.01));
+	
 	{
 		static ConstructorHelpers::FObjectFinder<UStaticMesh> ObjectFinder(TEXT("/Script/Engine.StaticMesh'/Engine/EditorMeshes/EditorSphere.EditorSphere'"));
 		ensure(ObjectFinder.Object);
@@ -28,6 +34,68 @@ APlanet::APlanet()
 		CloudStaticMeshComponent->SetStaticMesh(ObjectFinder.Object);
 	}
 }
+
+#if WITH_EDITOR
+void APlanet::PreEditChange(FProperty* PropertyThatWillChange)
+{
+	Super::PreEditChange(PropertyThatWillChange);
+
+	if (PropertyThatWillChange->GetName() == TEXT("SatelliteArray"))
+	{
+		Temp = SatelliteArray;
+	}
+	else
+	{
+		Temp.Empty();
+	}
+}
+
+void APlanet::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangeEvent)
+{
+	Super::PostEditChangeProperty(PropertyChangeEvent);
+
+	if (PropertyChangeEvent.GetPropertyName() == TEXT("SatelliteArray"))
+	{
+		const int32 Index = PropertyChangeEvent.GetArrayIndex(TEXT("SatelliteArray"));
+		switch (PropertyChangeEvent.ChangeType)
+		{
+		case EPropertyChangeType::ArrayAdd:
+		{
+			SatelliteArray[Index].Create(this, nullptr);
+			break;
+		}
+		case EPropertyChangeType::Duplicate:
+		{
+			SatelliteArray[Index].Create(this, &SatelliteArray[Index]);
+			break;
+		}
+		case EPropertyChangeType::ArrayRemove:
+		{
+			const int32 Num = Temp.Num();
+			for (int32 i = 0; i < Num; ++i)
+			{
+				if (SatelliteArray.Find(Temp[i]) == INDEX_NONE)
+				{
+					Temp[i].Destroy();
+					break;
+				}
+			}
+			Temp.Empty();
+			break;
+		}
+		case EPropertyChangeType::ArrayClear:
+		{
+			for (auto& It : Temp)
+			{
+				It.Destroy();
+			}
+			Temp.Empty();
+			break;
+		}
+		}
+	}
+}
+#endif
 
 void APlanet::OnConstruction(const FTransform& Transform)
 {
@@ -38,21 +106,6 @@ void APlanet::OnConstruction(const FTransform& Transform)
 	PlanetMaterialInstanceDynamic = PlanetStaticMeshComponent->CreateDynamicMaterialInstance(ElementIndex, MaterialInterface);
 	
 	CloudStaticMeshComponent->SetVisibility(bCloud);
-
-	const int32 NumberOfSatellite = SatelliteArray.Num();
-
-	for (int32 i = 0; i < NumberOfSatellite; ++i)
-	{
-		if (!SatelliteArray[i].ChildActorComponent)
-		{
-			SatelliteArray[i].Axis = NewObject<USceneComponent>(this);
-			SatelliteArray[i].Axis->RegisterComponent();
-			SatelliteArray[i].Axis->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::SnapToTargetIncludingScale);
-			SatelliteArray[i].ChildActorComponent = NewObject<UChildActorComponent>(this);
-			SatelliteArray[i].ChildActorComponent->RegisterComponent();
-			SatelliteArray[i].ChildActorComponent->AttachToComponent(SatelliteArray[i].Axis, FAttachmentTransformRules::SnapToTargetIncludingScale);
-		}
-	}
 }
 
 // Called when the game starts or when spawned
@@ -65,6 +118,11 @@ void APlanet::BeginPlay()
 void APlanet::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
+}
+
+void APlanet::BeginDestroy()
+{
+	Super::BeginDestroy();
 }
 
 // Called every frame
@@ -93,3 +151,32 @@ void APlanet::Tick(float DeltaTime)
 	}
 }
 
+void FSatellite::Create(class APlanet* InPlanet, FSatellite* InTemplate)
+{
+	FName AxisName = MakeUniqueObjectName(InPlanet, USceneComponent::StaticClass());
+	USceneComponent* AxisTemplate = InTemplate ? InTemplate->Axis : nullptr;
+	Axis = NewObject<USceneComponent>(InPlanet, AxisName, RF_Transactional, AxisTemplate);
+	Axis->RegisterComponent();
+	if (!InTemplate)
+		Axis->AttachToComponent(InPlanet->DefaultSceneRoot, FAttachmentTransformRules::SnapToTargetIncludingScale);
+	else
+		Axis->AttachToComponent(InPlanet->DefaultSceneRoot, FAttachmentTransformRules::KeepWorldTransform);
+
+	FName ChildActorComponentName = MakeUniqueObjectName(InPlanet, USceneComponent::StaticClass());
+	USceneComponent* ChildActorComponentTemplate = InTemplate ? InTemplate->ChildActorComponent : nullptr;
+	ChildActorComponent = NewObject<UChildActorComponent>(InPlanet, ChildActorComponentName, RF_Transactional, ChildActorComponentTemplate);
+	ChildActorComponent->RegisterComponent();
+	if (!InTemplate)
+		ChildActorComponent->AttachToComponent(Axis, FAttachmentTransformRules::SnapToTargetIncludingScale);
+	else
+		ChildActorComponent->AttachToComponent(Axis, FAttachmentTransformRules::KeepWorldTransform);
+}
+
+void FSatellite::Destroy()
+{
+	if (IsValid(Axis))
+	{
+		Axis->DestroyComponent();
+		ChildActorComponent->DestroyComponent();
+	}
+}
