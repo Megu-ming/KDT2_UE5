@@ -114,7 +114,7 @@ void APlanet::OnConstruction(const FTransform& Transform)
 	}
 	else
 	{
-		//PlanetMaterialInstanceDynamic->SetVectorParameterValue(TEXT("LightDirection"), FVector::ZeroVector);
+		PlanetMaterialInstanceDynamic->SetVectorParameterValue(TEXT("LightDirection"), FVector::ZeroVector);
 	}
 }
 
