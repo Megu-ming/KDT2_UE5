@@ -2,6 +2,8 @@
 
 
 #include "Actors/Trigger/MyTriggerBase.h"
+#include "Misc/MISC.h"
+#include "TriggerInterface.h"
 
 // Sets default values
 AMyTriggerBase::AMyTriggerBase()
@@ -141,6 +143,43 @@ void AMyTriggerBase::OutTrigger()
 	{
 		ITriggerInterface::Execute_ReceiveOutTrigger(Actor);
 	}
+}
+
+void AMyTriggerBase::PreRegisterAllComponents()
+{
+	Super::PreRegisterAllComponents();
+
+	if (TriggerObjectData.IsNull()) { return; }
+	if (TriggerObjectData.RowName == NAME_None) { return; }
+	const FTriggerDataTableRow* Data = TriggerObjectData.GetRow<FTriggerDataTableRow>(TEXT(""));
+	ensure(Data);
+	if (TriggerDataTableRow == Data) { return; }
+	TriggerDataTableRow = Data;
+	TriggerObject->SetChildActorClass(TriggerDataTableRow->Class);
+}
+
+void AMyTriggerBase::PostRegisterAllComponents()
+{
+	Super::PostRegisterAllComponents();
+
+	AActor* Actor = TriggerObject->GetChildActor();
+	if (!Actor)
+	{
+		return;
+	}
+	UStaticMeshComponent* StaticMeshComponent = Actor->FindComponentByClass<UStaticMeshComponent>();
+	if (!StaticMeshComponent)
+	{
+		ensure(false);
+		return;
+	}
+	StaticMeshComponent->SetStaticMesh(TriggerDataTableRow->StaticMesh);
+	StaticMeshComponent->SetRelativeTransform(TriggerDataTableRow->StaticMeshTransform);
+}
+
+void AMyTriggerBase::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
 }
 
 // Called when the game starts or when spawned

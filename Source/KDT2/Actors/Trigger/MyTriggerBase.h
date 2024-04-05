@@ -5,8 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/SphereComponent.h"
-#include "MISC/MISC.h"
-#include "TriggerInterface.h"
+#include "Data/Trigger/TriggerDataTableRow.h"
 #include "MyTriggerBase.generated.h"
 
 UCLASS()
@@ -36,6 +35,9 @@ protected:
 	void OutTrigger();
 
 protected:
+	virtual void PreRegisterAllComponents() override;
+	virtual void PostRegisterAllComponents() override;
+	virtual void OnConstruction(const FTransform& Transform) override;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -43,6 +45,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+protected:
+	UPROPERTY(EditAnywhere, meta = (RowType = "/Script/KDT2.TriggerDataTableRow"))
+	FDataTableRowHandle TriggerObjectData;
+
+	const FTriggerDataTableRow* TriggerDataTableRow;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -51,6 +58,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USphereComponent* Trigger;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UChildActorComponent* TriggerObject;
 };
