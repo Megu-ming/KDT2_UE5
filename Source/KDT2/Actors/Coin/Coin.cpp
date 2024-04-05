@@ -37,6 +37,17 @@ void ACoin::OutTrigger()
 	ITriggerInterface::OutTrigger();
 }
 
+void ACoin::OnSubData(const FDataTableRowHandle& InSubData)
+{
+	ITriggerInterface::OnSubData(InSubData);
+	const FCoinDataTableRow* Data = InSubData.GetRow<FCoinDataTableRow>(TEXT(""));
+	if (!Data) { ensure(false); return; }
+
+	CoinDataTableRowHandle = InSubData;
+	StaticMeshComponent->SetStaticMesh(Data->StaicMesh);
+	StaticMeshComponent->SetRelativeTransform(Data->StaticMeshTransform);
+}
+
 // Called when the game starts or when spawned
 void ACoin::BeginPlay()
 {

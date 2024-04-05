@@ -7,6 +7,21 @@
 #include "Actors/Trigger/TriggerInterface.h"
 #include "Coin.generated.h"
 
+USTRUCT()
+struct KDT2_API FCoinDataTableRow :public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UStaticMesh* StaicMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FTransform StaticMeshTransform;
+
+	UPROPERTY(EditAnywhere)
+	uint32 Point = 1;
+};
+
 UCLASS()
 class KDT2_API ACoin : public AActor, public ITriggerInterface
 {
@@ -21,6 +36,8 @@ public:
 	virtual void InTrigger() override;
 	virtual void OutTrigger() override;
 
+	virtual void OnSubData(const FDataTableRowHandle& InSubData);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -32,4 +49,7 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* StaticMeshComponent;
+
+	UPROPERTY()
+	FDataTableRowHandle CoinDataTableRowHandle;
 };

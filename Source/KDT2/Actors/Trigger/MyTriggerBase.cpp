@@ -163,18 +163,19 @@ void AMyTriggerBase::PostRegisterAllComponents()
 	Super::PostRegisterAllComponents();
 
 	AActor* Actor = TriggerObject->GetChildActor();
-	if (!Actor)
+	if (!Actor) { return; }
+	if (TriggerDataTableRow->SubData.IsNull()) { return; }
+	if (TriggerDataTableRow->SubData.RowName == NAME_None) { return; }
+
+	ITriggerInterface* Interface = Cast<ITriggerInterface>(Actor);
+	if (Interface)
 	{
-		return;
+		Interface->OnSubData(TriggerDataTableRow->SubData);
 	}
-	UStaticMeshComponent* StaticMeshComponent = Actor->FindComponentByClass<UStaticMeshComponent>();
-	if (!StaticMeshComponent)
+	else
 	{
-		ensure(false);
-		return;
+		ITriggerInterface::Execute_ReceiveOnSubData(Actor, TriggerObjectData);
 	}
-	StaticMeshComponent->SetStaticMesh(TriggerDataTableRow->StaticMesh);
-	StaticMeshComponent->SetRelativeTransform(TriggerDataTableRow->StaticMeshTransform);
 }
 
 void AMyTriggerBase::OnConstruction(const FTransform& Transform)

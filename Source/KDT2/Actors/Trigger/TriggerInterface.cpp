@@ -44,3 +44,14 @@ void ITriggerInterface::OutTrigger()
 	}
 	Execute_ReceiveOutTrigger(Actor);
 }
+
+void ITriggerInterface::OnSubData(const FDataTableRowHandle& InTableRowBase)
+{
+	AActor* Actor = Cast<AActor>(this);
+	if (!Actor)
+	{
+		ensure(false);
+		return;
+	}
+	Execute_ReceiveOnSubData(Actor, InTableRowBase);
+}

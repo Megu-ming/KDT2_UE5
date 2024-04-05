@@ -11,11 +11,8 @@ struct KDT2_API FTriggerDataTableRow : public FTableRowBase
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UStaticMesh* StaticMesh;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FTransform StaticMeshTransform;
+	UPROPERTY(EditAnywhere)
+	FDataTableRowHandle SubData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AActor> Class;

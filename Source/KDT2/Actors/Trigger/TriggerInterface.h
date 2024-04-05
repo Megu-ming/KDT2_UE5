@@ -1,6 +1,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/DataTable.h"
+#include "Data/Trigger/TriggerDataTableRow.h"
 #include "TriggerInterface.generated.h"
 
 UINTERFACE()
@@ -28,5 +30,8 @@ public:
 	virtual void InTrigger();
 	virtual void OutTrigger();
 
-
+public:
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "OutTrigger"))
+	void ReceiveOnSubData(const FDataTableRowHandle& InTableRowBase);
+	virtual void OnSubData(const FDataTableRowHandle& InTableRowBase);
 };
