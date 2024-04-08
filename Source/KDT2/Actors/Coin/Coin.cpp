@@ -60,5 +60,8 @@ void ACoin::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	const double DeltaSpeed = DeltaTime * RotationSpeed;
+	const FRotator Rotation(0., DeltaSpeed, 0.);
+	StaticMeshComponent->AddLocalRotation(Rotation);
 }
 

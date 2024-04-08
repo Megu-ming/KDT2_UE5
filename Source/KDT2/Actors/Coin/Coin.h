@@ -52,4 +52,7 @@ protected:
 
 	UPROPERTY()
 	FDataTableRowHandle CoinDataTableRowHandle;
+
+	UPROPERTY(EditAnywhere)
+	double RotationSpeed = 45.0;
 };

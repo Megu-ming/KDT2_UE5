@@ -17,12 +17,13 @@ class KDT2_API ACoinGameStateBase : public AGameStateBase
 public:
 	ACoinGameStateBase();
 	virtual void BeginPlay() override;
+	
 
 	uint32 GetRemainCoinNum() const { return RemainCoinNum; };
 
 private:
 	TSubclassOf<class UCoinInfoUserWidget> CoinWidgetClass;
-	UCoinInfoUserWidget* CoinInfoWidget;
+	UCoinInfoUserWidget* CoinInfoWidget = nullptr;
 	uint32 RemainCoinNum = 0;
 
 };
