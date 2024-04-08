@@ -19,6 +19,9 @@ struct KDT2_API FCoinDataTableRow : public FTableRowBase
 	FTransform StaticMeshTransform;
 
 	UPROPERTY(EditAnywhere)
+	USoundBase* CoinSound;
+
+	UPROPERTY(EditAnywhere)
 	uint32 Point = 1;
 };
 
@@ -41,6 +44,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:	
 	// Called every frame
@@ -53,6 +57,14 @@ protected:
 	UPROPERTY()
 	FDataTableRowHandle CoinDataTableRowHandle;
 
+	FTimerHandle CoinDestroyTimerHandle;
+
+protected:
+	bool bPandingKill = false;
+
 	UPROPERTY(EditAnywhere)
 	double RotationSpeed = 45.0;
+
+	UPROPERTY(EditAnywhere)
+	USoundBase* CoinSound;
 };

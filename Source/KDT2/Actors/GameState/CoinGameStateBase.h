@@ -17,8 +17,8 @@ class KDT2_API ACoinGameStateBase : public AGameStateBase
 public:
 	ACoinGameStateBase();
 	virtual void BeginPlay() override;
-	
-
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	void GetCoin(const struct FCoinDataTableRow* InCoinDataTableRow);
 	uint32 GetRemainCoinNum() const { return RemainCoinNum; };
 
 private:
@@ -26,4 +26,5 @@ private:
 	UCoinInfoUserWidget* CoinInfoWidget = nullptr;
 	uint32 RemainCoinNum = 0;
 
+	FTimerHandle LevelTransitionTimerHandle;
 };

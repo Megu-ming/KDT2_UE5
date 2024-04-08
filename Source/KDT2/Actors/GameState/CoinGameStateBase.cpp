@@ -24,3 +24,23 @@ void ACoinGameStateBase::BeginPlay()
 	CoinInfoWidget = CreateWidget<UCoinInfoUserWidget>(GetWorld(), CoinWidgetClass);
 	CoinInfoWidget->AddToViewport();
 }
+
+void ACoinGameStateBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	GetWorld()->GetTimerManager().ClearTimer(LevelTransitionTimerHandle);
+}
+
+void ACoinGameStateBase::GetCoin(const FCoinDataTableRow* InCoinDataTableRow)
+{
+	--RemainCoinNum;
+	if (RemainCoinNum == 0)
+	{
+		auto TimerDelegate = [this]()
+			{
+				UGameplayStatics::OpenLevel(this, TEXT("LobbyMap"));
+			};
+		GetWorld()->GetTimerManager().SetTimer(LevelTransitionTimerHandle, TimerDelegate, 2.5f, false);
+	}
+}

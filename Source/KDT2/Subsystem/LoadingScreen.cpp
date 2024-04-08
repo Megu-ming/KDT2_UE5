@@ -16,12 +16,12 @@ void ULoadingScreenSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 void ULoadingScreenSubsystem::OnPreLoadMap(const FString& MapName)
 {
-	if (!WidgetClass) 
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Widget class not set"));
-		//check(false);
-		return; 
-	}
+	//if (!WidgetClass) 
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("Widget class not set"));
+	//	//check(false);
+	//	return; 
+	//}
 
 	//UUserWidget* Widget = CreateWidget(GetWorld(), WidgetClass);
 	if (IsMoviePlayerEnabled())
