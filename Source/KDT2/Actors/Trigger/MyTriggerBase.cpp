@@ -23,10 +23,14 @@ AMyTriggerBase::AMyTriggerBase()
 	ActiveRadius->SetSphereRadius(600.f);
 	Trigger->SetSphereRadius(120.f);
 
-	// FText	: 국가별 처리가 가능한 문자열
-	// FString	: C++ String
-	// FName	: 문자열 해싱(특정 타입을 정수로 변환해서 들고 있는 것)
-	//				대소문자 구분x, 정수로 변환해서 관리, 검색 속도를 향상시키기 위해서 사용
+	// FText	: 국가별(한국: 안녕, 영어: Hello) 처리가 가능한 문자열
+	// FString	: 문자열(C++ wstring)
+	// FName	: 문자열 해슁(특정 타입을 정수로 변환해서 들고 있는 것)
+	//			대소문자 구분이 없다
+	//			정수로 변환해서 관리
+	//			검색 속도를 향상시키기 위해서 사용(문자열 비교보다 정수 비교가 더 빠르기 때문)
+	//			Ex) "Hello" -> 00123123003215
+	//	unsigned int64 HashValue = HashFunction("Hello");
 	ActiveRadius->SetCollisionProfileName(FCollisionPresetNameTable::PlayerDetect);
 	Trigger->SetCollisionProfileName(FCollisionPresetNameTable::PlayerDetect);
 
@@ -36,10 +40,10 @@ AMyTriggerBase::AMyTriggerBase()
 		//		- TriggerObject
 	}
 
-	ActiveRadius->OnComponentBeginOverlap.AddDynamic(this,&ThisClass::OnActiveRadiusBeginOverlap);
-	ActiveRadius->OnComponentEndOverlap.AddDynamic(this,&ThisClass::OnActiveRadiusEndOverlap);
-	Trigger->OnComponentBeginOverlap.AddDynamic(this,&ThisClass::OnTriggerBeginOverlap);
-	Trigger->OnComponentEndOverlap.AddDynamic(this,&ThisClass::OnTriggerEndOverlap);
+	ActiveRadius->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnActiveRadiusBeginOverlap);
+	ActiveRadius->OnComponentEndOverlap.AddDynamic(this, &ThisClass::OnActiveRadiusEndOverlap);
+	Trigger->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnTriggerBeginOverlap);
+	Trigger->OnComponentEndOverlap.AddDynamic(this, &ThisClass::OnTriggerEndOverlap);
 }
 
 void AMyTriggerBase::OnActiveRadiusBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -49,7 +53,7 @@ void AMyTriggerBase::OnActiveRadiusBeginOverlap(UPrimitiveComponent* OverlappedC
 
 void AMyTriggerBase::OnActiveRadiusEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	InActive();
+	Inactive();
 }
 
 void AMyTriggerBase::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -62,12 +66,12 @@ void AMyTriggerBase::OnTriggerEndOverlap(UPrimitiveComponent* OverlappedComponen
 	OutTrigger();
 }
 
-AActor* AMyTriggerBase::GetTriggerObject()
+AActor* AMyTriggerBase::GetTriggerOjbect()
 {
-	AActor* Actor= TriggerObject->GetChildActor();
+	AActor* Actor = TriggerObject->GetChildActor();
 	if (!IsValid(Actor))
 	{
-		ensureAlwaysMsgf(false,TEXT("Actor is nullptr"));
+		ensureAlwaysMsgf(false, TEXT("Actor is nullptr"));
 		return nullptr;
 	}
 
@@ -83,7 +87,7 @@ AActor* AMyTriggerBase::GetTriggerObject()
 
 void AMyTriggerBase::Active()
 {
-	AActor* Actor = GetTriggerObject();
+	AActor* Actor = GetTriggerOjbect();
 	if (!Actor) { return; }
 
 	ITriggerInterface* Interface = Cast<ITriggerInterface>(Actor);
@@ -97,31 +101,31 @@ void AMyTriggerBase::Active()
 	}
 }
 
-void AMyTriggerBase::InActive()
+void AMyTriggerBase::Inactive()
 {
-	AActor* Actor = GetTriggerObject();
+	AActor* Actor = GetTriggerOjbect();
 	if (!Actor) { return; }
 
 	ITriggerInterface* Interface = Cast<ITriggerInterface>(Actor);
 	if (Interface)
 	{
-		Interface;
+		Interface->Inactive();
 	}
 	else
 	{
-		ITriggerInterface::Execute_ReceiveInActive(Actor);
+		ITriggerInterface::Execute_ReceiveInactive(Actor);
 	}
 }
 
 void AMyTriggerBase::InTrigger()
 {
-	AActor* Actor = GetTriggerObject();
+	AActor* Actor = GetTriggerOjbect();
 	if (!Actor) { return; }
 
 	ITriggerInterface* Interface = Cast<ITriggerInterface>(Actor);
 	if (Interface)
 	{
-		Interface;
+		Interface->InTrigger();
 	}
 	else
 	{
@@ -131,13 +135,13 @@ void AMyTriggerBase::InTrigger()
 
 void AMyTriggerBase::OutTrigger()
 {
-	AActor* Actor = GetTriggerObject();
+	AActor* Actor = GetTriggerOjbect();
 	if (!Actor) { return; }
 
 	ITriggerInterface* Interface = Cast<ITriggerInterface>(Actor);
 	if (Interface)
 	{
-		Interface;
+		Interface->OutTrigger();
 	}
 	else
 	{
@@ -162,8 +166,9 @@ void AMyTriggerBase::PostRegisterAllComponents()
 {
 	Super::PostRegisterAllComponents();
 
-	AActor* Actor = TriggerObject->GetChildActor();
+	AActor* Actor = GetTriggerOjbect();
 	if (!Actor) { return; }
+
 	if (TriggerDataTableRow->SubData.IsNull()) { return; }
 	if (TriggerDataTableRow->SubData.RowName == NAME_None) { return; }
 

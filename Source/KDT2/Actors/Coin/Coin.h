@@ -8,7 +8,7 @@
 #include "Coin.generated.h"
 
 USTRUCT()
-struct KDT2_API FCoinDataTableRow :public FTableRowBase
+struct KDT2_API FCoinDataTableRow : public FTableRowBase
 {
 	GENERATED_BODY()
 
@@ -32,7 +32,7 @@ public:
 	ACoin();
 
 	virtual void Active() override;
-	virtual void InActive() override;
+	virtual void Inactive() override;
 	virtual void InTrigger() override;
 	virtual void OutTrigger() override;
 

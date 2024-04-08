@@ -21,14 +21,14 @@ ASun::ASun()
 		StaticMeshComponent->SetStaticMesh(ObjectFinder.Object);
 	}
 	{
-		static ConstructorHelpers::FObjectFinder<UMaterial> ObjectFinder(TEXT("/Script/Engine.Material'/Game/KDT/Blueprint/SolarSystem/MT_Sun.MT_Sun'"));
+		static ConstructorHelpers::FObjectFinder<UMaterial> ObjectFinder(TEXT("/Script/Engine.Material'/Game/KDT2/Blueprint/SolarSystem/MT_Sun.MT_Sun'"));
 		ensure(ObjectFinder.Object);
 		SunMaterial = ObjectFinder.Object;
 		StaticMeshComponent->SetMaterial(0, SunMaterial);
 	}
 
 	{
-		static ConstructorHelpers::FObjectFinder<UCurveFloat> ObjectFinder(TEXT("/Script/Engine.CurveFloat'/Game/KDT/Blueprint/SolarSystem/Curve_SunPower.Curve_SunPower'"));
+		static ConstructorHelpers::FObjectFinder<UCurveFloat> ObjectFinder(TEXT("/Script/Engine.CurveFloat'/Game/KDT2/Blueprint/SolarSystem/Curve_SunPower.Curve_SunPower'"));
 		ensure(ObjectFinder.Object);
 
 		FOnTimelineFloat Delegate;
@@ -40,7 +40,7 @@ ASun::ASun()
 	}
 
 	{
-		PointLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("Sun Light"));
+		PointLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("Sun light"));
 		PointLight->SetupAttachment(GetRootComponent());
 		PointLight->Intensity = 10.f;
 		PointLight->AttenuationRadius = 1000000000.f;
@@ -60,7 +60,7 @@ void ASun::OnConstruction(const FTransform& Transform)
 void ASun::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	SunPowerTimelineComponent->Play();
 }
 
@@ -68,13 +68,12 @@ void ASun::BeginPlay()
 void ASun::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
-	/*SceneComponent->AddRelativeRotation(FRotator(0, SceneRotationSpeed * DeltaTime, 0));
-	StaticMeshEarthComponent->AddRelativeRotation(FRotator(0, EarthRotationSpeed * DeltaTime, 0));*/
+
 }
 
 void ASun::OnSunPower(float InPower)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Power : %f"), InPower);
+	UE_LOG(LogTemp, Warning, TEXT("Power: %f"), InPower);
 	MID->SetScalarParameterValue(TEXT("Power"), InPower * 50.f);
 }
+

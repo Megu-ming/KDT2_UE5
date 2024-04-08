@@ -12,7 +12,6 @@ public:
 	void SetLoadingScreenClass(TSubclassOf<UUserWidget> InWidgetClass);
 
 public:
-	/** Implement this for initialization of instances of the system */
 	virtual void Initialize(FSubsystemCollectionBase& Collection);
 
 protected:
@@ -20,5 +19,4 @@ protected:
 
 private:
 	TSubclassOf<UUserWidget> WidgetClass;
-
 };

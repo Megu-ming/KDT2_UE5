@@ -1,5 +1,7 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
 #include "TriggerInterface.h"
-//#include UE_INLINE_GENERATED_CPP_BY_NAME(TriggerInterface)
 
 void ITriggerInterface::Active()
 {
@@ -12,7 +14,7 @@ void ITriggerInterface::Active()
 	Execute_ReceiveActive(Actor);
 }
 
-void ITriggerInterface::InActive()
+void ITriggerInterface::Inactive()
 {
 	AActor* Actor = Cast<AActor>(this);
 	if (!Actor)
@@ -20,7 +22,7 @@ void ITriggerInterface::InActive()
 		ensure(false);
 		return;
 	}
-	Execute_ReceiveInActive(Actor);
+	Execute_ReceiveInactive(Actor);
 }
 
 void ITriggerInterface::InTrigger()

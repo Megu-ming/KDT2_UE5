@@ -21,16 +21,15 @@ public:
 	void OnActiveRadiusBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
 	void OnActiveRadiusEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
 	UFUNCTION()
 	void OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
 	void OnTriggerEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 protected:
-	AActor* GetTriggerObject();
+	AActor* GetTriggerOjbect();
 	void Active();
-	void InActive();
+	void Inactive();
 	void InTrigger();
 	void OutTrigger();
 
@@ -41,23 +40,23 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 protected:
-	UPROPERTY(EditAnywhere, meta = (RowType = "/Script/KDT2.TriggerDataTableRow"))
+	UPROPERTY(EditAnywhere, meta=(RowType="/Script/KDT2.TriggerDataTableRow"))
 	FDataTableRowHandle TriggerObjectData;
-
+	
 	const FTriggerDataTableRow* TriggerDataTableRow;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USphereComponent* ActiveRadius;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USphereComponent* Trigger;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY()
 	UChildActorComponent* TriggerObject;
 };

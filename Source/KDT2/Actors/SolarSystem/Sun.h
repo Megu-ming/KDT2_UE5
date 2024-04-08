@@ -36,11 +36,11 @@ private:
 	UPROPERTY(EditAnywhere)
 	UTimelineComponent* SunPowerTimelineComponent = nullptr;
 
-	UPROPERTY(EditAnywhere)
-	UPointLightComponent* PointLight = nullptr;
-
 	UPROPERTY()
 	UMaterialInstanceDynamic* MID = nullptr;
+
+	UPROPERTY(EditAnywhere)
+	UPointLightComponent* PointLight;
 
 	static inline UMaterial* SunMaterial = nullptr;
 };

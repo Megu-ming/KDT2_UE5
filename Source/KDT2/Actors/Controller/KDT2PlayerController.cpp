@@ -2,27 +2,26 @@
 
 
 #include "Actors/Controller/KDT2PlayerController.h"
-#include "EnhancedInputSubsystems.h"
 #include "Data/Input/BasicInputDataConfig.h"
+#include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 
 void AKDT2PlayerController::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-
-	PlayerCameraManager->ViewPitchMax = 40.f;
-	PlayerCameraManager->ViewPitchMin = -40.f;
+	PlayerCameraManager->ViewPitchMax = 40;
+	PlayerCameraManager->ViewPitchMin = -40;
 }
 
 void AKDT2PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UEnhancedInputLocalPlayerSubsystem* Subsystem =
-		ULocalPlayer::GetSubsystem< UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = 
+		ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 
 	const UBasicInputDataConfig* BasicInputDataConfig = GetDefault<UBasicInputDataConfig>();
-	Subsystem->AddMappingContext(BasicInputDataConfig->InputMappingContext,0);
+	Subsystem->AddMappingContext(BasicInputDataConfig->InputMappingContext, 0);
 }
 
 void AKDT2PlayerController::SetupInputComponent()
@@ -30,7 +29,7 @@ void AKDT2PlayerController::SetupInputComponent()
 	Super::SetupInputComponent();
 	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent);
 	ensure(EnhancedInputComponent);
-	
+
 	const UBasicInputDataConfig* BasicInputDataConfig = GetDefault<UBasicInputDataConfig>();
 	EnhancedInputComponent->BindAction(BasicInputDataConfig->Move, ETriggerEvent::Triggered, this, &ThisClass::OnMove);
 	EnhancedInputComponent->BindAction(BasicInputDataConfig->Look, ETriggerEvent::Triggered, this, &ThisClass::OnLook);
@@ -39,6 +38,7 @@ void AKDT2PlayerController::SetupInputComponent()
 void AKDT2PlayerController::OnMove(const FInputActionValue& InputActionValue)
 {
 	APawn* ControlledPawn = GetPawn();
+
 	const FRotator Rotation = K2_GetActorRotation();
 	const FRotator YawRotation = FRotator(0., Rotation.Yaw, 0.);
 	const FVector ForwardVector = YawRotation.Vector();

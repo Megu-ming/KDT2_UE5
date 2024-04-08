@@ -9,10 +9,10 @@ ACoin::ACoin()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> Asset(TEXT("/Script/Engine.StaticMesh'/Engine/EditorMeshes/EditorHelp.EditorHelp'"));
+	ConstructorHelpers::FObjectFinder<UStaticMesh> Asset{TEXT("/Script/Engine.StaticMesh'/Engine/EditorMeshes/EditorHelp.EditorHelp'")};
 	check(Asset.Succeeded());
 
-	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
+	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
 	SetRootComponent(StaticMeshComponent);
 	StaticMeshComponent->SetStaticMesh(Asset.Object);
 }
@@ -22,9 +22,9 @@ void ACoin::Active()
 	ITriggerInterface::Active();
 }
 
-void ACoin::InActive()
+void ACoin::Inactive()
 {
-	ITriggerInterface::InActive();
+	ITriggerInterface::Inactive();
 }
 
 void ACoin::InTrigger()
