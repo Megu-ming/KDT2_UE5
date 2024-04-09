@@ -19,6 +19,14 @@ protected:
 
 	virtual FRotator GetDeltaRotation(float DeltaTime) const;
 
-private:
+	virtual FRotator ComputeOrientToMovementRotation(const FRotator& CurrentRotation, float DeltaTime, FRotator& DeltaRotation) const;
+
+protected:
 	FRotator RotationRate = FRotator(0., 360., 0.);
+
+	UPROPERTY()
+	FVector AccelerationKDT2;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float RotationSpeedRate = 1.f;
 };

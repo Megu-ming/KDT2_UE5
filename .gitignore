@@ -362,11 +362,11 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-Binaries
-Intermediate
-Content/Developers
+Binaries/
+Intermediate/
+Content/Developers/
 *.sln
-.vsconfig
-Saved
-Intermediate
+.vsconfig/
+Saved/
+Intermediate/
 KDT2.sln
