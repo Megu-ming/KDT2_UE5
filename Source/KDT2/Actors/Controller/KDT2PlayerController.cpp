@@ -5,12 +5,16 @@
 #include "Data/Input/BasicInputDataConfig.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "CameraManager/KDT2PlayerCameraManager.h"
+
+AKDT2PlayerController::AKDT2PlayerController()
+{
+	PlayerCameraManagerClass = AKDT2PlayerCameraManager::StaticClass();
+}
 
 void AKDT2PlayerController::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-	PlayerCameraManager->ViewPitchMax = 40;
-	PlayerCameraManager->ViewPitchMin = -40;
 }
 
 void AKDT2PlayerController::BeginPlay()
