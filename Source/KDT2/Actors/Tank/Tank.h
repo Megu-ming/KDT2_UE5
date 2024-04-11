@@ -10,6 +10,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Components/KDT2FloatingPawnMovement.h"
+#include "Subsystem/DataSubsystem.h"
+#include "MISC/MISC.h"
 #include "Tank.generated.h"
 
 UCLASS()
@@ -34,6 +36,13 @@ public:
 
 	void ZoomIn();
 	void ZoomOut();
+	void Fire();
+protected:
+	FName ProjectileName = TEXT("TankProjectile");
+	const FProjectileDataTableRow* ProjectileRow;
+
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "Fire"))
+	void ReceiveFire();
 protected:
 	/*
 	-Box
@@ -46,7 +55,7 @@ protected:
 				-Arrow
 				-ZoomCamera
 	*/
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UBoxComponent* BoxComponent;
 	UPROPERTY(EditAnywhere)
 	USpringArmComponent* CameraSpringArmComponent;
@@ -58,7 +67,7 @@ protected:
 	USpringArmComponent* TurretSpringArmComponent;
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* Turret;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USceneComponent* Muzzle;
 	UPROPERTY(EditAnywhere)
 	UArrowComponent* Arrow;
@@ -71,6 +80,9 @@ protected:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UUserWidget> UI;
-
+	FTimerHandle FireTimerHandle;
 	UUserWidget* ZoomInWidget;
+
+protected:
+	FActorPool ProjectilePool;
 };

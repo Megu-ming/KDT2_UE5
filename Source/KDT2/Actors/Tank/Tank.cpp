@@ -4,6 +4,7 @@
 #include "Actors/Tank/Tank.h"
 #include "MISC/MISC.h"
 #include "Blueprint/UserWidget.h"
+#include "Projectile.h"
 
 // Sets default values
 ATank::ATank()
@@ -48,8 +49,13 @@ void ATank::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	check(UI);
+	ensure(UI);
 	ZoomInWidget = CreateWidget<UUserWidget>(GetWorld(), UI);
+
+	UDataSubsystem* DataSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UDataSubsystem>();
+	ProjectileRow = DataSubsystem->FindProjectile(ProjectileName);
+
+	ProjectilePool.Create(GetWorld(), AProjectile::StaticClass(), 5);
 }
 
 // Called every frame
@@ -80,3 +86,23 @@ void ATank::ZoomOut()
 	ZoomInWidget->RemoveFromParent();
 }
 
+void ATank::Fire()
+{
+	bool bTimer = GetWorld()->GetTimerManager().IsTimerActive(FireTimerHandle);
+	if (bTimer)
+	{
+		return;
+	}
+	ensure(ProjectileRow->FireDelay > 0.f);
+	GetWorld()->GetTimerManager().SetTimer(FireTimerHandle,ProjectileRow->FireDelay,false);
+	UWorld* World = GetWorld();
+	ensure(World);
+
+	const FTransform& MuzzleTransform = Muzzle->GetComponentTransform();
+	FTransform Transform = FTransform(MuzzleTransform.GetRotation(), MuzzleTransform.GetLocation());
+
+	AProjectile* NewProjectile = ProjectilePool.New<AProjectile>(Transform, true, this, this);
+	
+	NewProjectile->SetProjectileData(ProjectileRow);
+	NewProjectile->FinishSpawning(MuzzleTransform, true);
+}

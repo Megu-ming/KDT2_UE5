@@ -46,4 +46,7 @@ void ATankPlayerController::OnZoomOut(const FInputActionValue& InputActionValue)
 
 void ATankPlayerController::OnFire(const FInputActionValue& InputActionValue)
 {
+	ATank* Tank = Cast<ATank>(GetPawn());
+	ensure(Tank);
+	Tank->Fire();
 }
