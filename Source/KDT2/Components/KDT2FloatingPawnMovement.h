@@ -24,7 +24,7 @@ protected:
 protected:
 	FRotator RotationRate = FRotator(0., 360., 0.);
 
-	UPROPERTY()
+	//UPROPERTY()
 	FVector AccelerationKDT2;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
