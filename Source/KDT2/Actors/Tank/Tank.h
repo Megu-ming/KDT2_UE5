@@ -4,6 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Components/BoxComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/ArrowComponent.h"
+#include "Components/KDT2FloatingPawnMovement.h"
 #include "Tank.generated.h"
 
 UCLASS()
@@ -26,4 +32,45 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void ZoomIn();
+	void ZoomOut();
+protected:
+	/*
+	-Box
+		-CameraSpringArmComponent
+			-DefaultCamera
+		-Body
+		-TurretSpringArmComponent
+			-Turret
+			-Muzzle
+				-Arrow
+				-ZoomCamera
+	*/
+	UPROPERTY(EditAnywhere)
+	UBoxComponent* BoxComponent;
+	UPROPERTY(EditAnywhere)
+	USpringArmComponent* CameraSpringArmComponent;
+	UPROPERTY(EditAnywhere)
+	UCameraComponent* DefaultCamera;
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* Body;
+	UPROPERTY(EditAnywhere)
+	USpringArmComponent* TurretSpringArmComponent;
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* Turret;
+	UPROPERTY(EditAnywhere)
+	USceneComponent* Muzzle;
+	UPROPERTY(EditAnywhere)
+	UArrowComponent* Arrow;
+	UPROPERTY(EditAnywhere)
+	UCameraComponent* ZoomCamera;
+protected:
+	UPROPERTY(EditAnywhere)
+	UKDT2FloatingPawnMovement* FloatingPawnMovement;
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UUserWidget> UI;
+
+	UUserWidget* ZoomInWidget;
 };
