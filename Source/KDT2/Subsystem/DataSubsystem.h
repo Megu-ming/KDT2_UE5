@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
-#include "Actors/Tank/Projectile.h"
+#include "Actors/Projectile/Projectile.h"
 #include "DataSubsystem.generated.h"
 
 /**
@@ -17,7 +17,7 @@ class KDT2_API UDataSubsystem : public UGameInstanceSubsystem
 public:
 	UDataSubsystem();
 
-	const FProjectileDataTableRow* FindProjectile(const FName& Inkey);
+	const FProjectileDataTableRow* FindProjectile(const FName& InKey);
 
 protected:
 	UPROPERTY()

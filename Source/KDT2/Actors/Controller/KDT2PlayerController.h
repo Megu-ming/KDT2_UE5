@@ -14,6 +14,7 @@ UCLASS()
 class KDT2_API AKDT2PlayerController : public APlayerController
 {
 	GENERATED_BODY()
+	
 public:
 	AKDT2PlayerController();
 

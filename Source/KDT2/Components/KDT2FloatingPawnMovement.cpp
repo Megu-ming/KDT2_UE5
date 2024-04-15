@@ -17,14 +17,13 @@ void UKDT2FloatingPawnMovement::TickComponent(float DeltaTime, ELevelTick TickTy
 
 	FRotator CurrentRotation = UpdatedComponent->GetComponentRotation(); // Normalized
 	CurrentRotation.DiagnosticCheckNaN(TEXT("UKDT2FloatingPawnMovement::TickComponent(): CurrentRotation"));
-	
+
 	const float DeltaTimeOverride = DeltaTime * RotationSpeedRate;
 
 	FRotator DeltaRot = GetDeltaRotation(DeltaTimeOverride);
 	DeltaRot.DiagnosticCheckNaN(TEXT("UKDT2FloatingPawnMovement::TickComponent(): GetDeltaRotation"));
 
 	FRotator DesiredRotation = ComputeOrientToMovementRotation(CurrentRotation, DeltaTimeOverride, DeltaRot);
-
 	// Accumulate a desired new rotation.
 	const float AngleTolerance = 1e-3f;
 
@@ -72,11 +71,11 @@ FRotator UKDT2FloatingPawnMovement::ComputeOrientToMovementRotation(const FRotat
 {
 	if (AccelerationKDT2.SizeSquared() < UE_KINDA_SMALL_NUMBER)
 	{
-		// AI path following request can orient us in that direction (it's effectively an acceleration)
-		/*if (bHasRequestedVelocity && RequestedVelocity.SizeSquared() > UE_KINDA_SMALL_NUMBER)
-		{
-			return RequestedVelocity.GetSafeNormal().Rotation();
-		}*/
+		//// AI path following request can orient us in that direction (it's effectively an acceleration)
+		//if (bHasRequestedVelocity && RequestedVelocity.SizeSquared() > UE_KINDA_SMALL_NUMBER)
+		//{
+		//	return RequestedVelocity.GetSafeNormal().Rotation();
+		//}
 
 		// Don't change rotation if there is no acceleration.
 		return CurrentRotation;

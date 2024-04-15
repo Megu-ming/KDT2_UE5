@@ -23,6 +23,7 @@ protected:
 	FText OnCoinTextChange();
 
 protected:
-	UPROPERTY(EditAnywhere, meta=(BindWidget))
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UTextBlock* RemainCoinText;
+
 };

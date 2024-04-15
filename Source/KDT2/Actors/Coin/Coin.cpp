@@ -33,7 +33,7 @@ void ACoin::Inactive()
 void ACoin::InTrigger()
 {
 	ITriggerInterface::InTrigger();
-	
+
 	bPandingKill = true;
 
 	ACoinGameStateBase* CoinGameState = Cast<ACoinGameStateBase>(GetWorld()->GetGameState());
@@ -51,14 +51,14 @@ void ACoin::InTrigger()
 		{
 			if (IsValid(this))
 			{
-					if (IsValid(Owner))
-					{
-						Owner->Destroy();
-					}
-					else
-					{
-						Destroy();
-					}
+				if (IsValid(Owner))
+				{
+					Owner->Destroy();
+				}
+				else
+				{
+					Destroy();
+				}
 			}
 		};
 
@@ -86,12 +86,12 @@ void ACoin::OnSubData(const FDataTableRowHandle& InSubData)
 void ACoin::BeginPlay()
 {
 	Super::BeginPlay();
+	
 }
 
 void ACoin::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
-
 	GetWorld()->GetTimerManager().ClearTimer(CoinDestroyTimerHandle);
 }
 
@@ -102,18 +102,18 @@ void ACoin::Tick(float DeltaTime)
 
 	if (bPandingKill)
 	{
-		const double DeltaSpeed = DeltaTime * RotationSpeed * 10.;
-		const FRotator Rotation(0., DeltaSpeed, 0.);
-		StaticMeshComponent->AddLocalRotation(Rotation);
+		const double DeltaRotation = DeltaTime * RotationSpeed * 10.0;
+		const FRotator Rotator{ 0.,DeltaRotation, 0. };
+		StaticMeshComponent->AddLocalRotation(Rotator);
 
-		const FVector Location = FVector::UpVector * DeltaTime * 100.;
+		const FVector Location = FVector::UpVector * DeltaTime * 100.0;
 		StaticMeshComponent->AddRelativeLocation(Location);
 	}
 	else
 	{
-		const double DeltaSpeed = DeltaTime * RotationSpeed;
-		const FRotator Rotation(0., DeltaSpeed, 0.);
-		StaticMeshComponent->AddLocalRotation(Rotation);
+		const double DeltaRotation = DeltaTime * RotationSpeed;
+		const FRotator Rotator{ 0.,DeltaRotation, 0. };
+		StaticMeshComponent->AddLocalRotation(Rotator);
 	}
 }
 

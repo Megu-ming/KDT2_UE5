@@ -6,9 +6,7 @@
 #include "Actors/Controller/KDT2PlayerController.h"
 #include "TankPlayerController.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class KDT2_API ATankPlayerController : public AKDT2PlayerController
 {

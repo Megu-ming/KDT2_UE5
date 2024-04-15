@@ -5,7 +5,7 @@
 #include "Data/Input/BasicInputDataConfig.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
-#include "CameraManager/KDT2PlayerCameraManager.h"
+#include "Actors/CameraManager/KDT2PlayerCameraManager.h"
 
 AKDT2PlayerController::AKDT2PlayerController()
 {

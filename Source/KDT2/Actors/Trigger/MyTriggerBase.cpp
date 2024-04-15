@@ -172,7 +172,6 @@ void AMyTriggerBase::PostRegisterAllComponents()
 	Actor->SetOwner(this);
 
 	if (TriggerDataTableRow->SubData.IsNull()) { return; }
-	if (TriggerDataTableRow->SubData.RowName == NAME_None) { return; }
 
 	ITriggerInterface* Interface = Cast<ITriggerInterface>(Actor);
 	if (Interface)

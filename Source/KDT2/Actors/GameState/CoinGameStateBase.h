@@ -6,9 +6,9 @@
 #include "GameFramework/GameStateBase.h"
 #include "CoinGameStateBase.generated.h"
 
-/**
- * 
- */
+class UCoinInfoUserWidget;
+struct FCoinDataTableRow;
+
 UCLASS()
 class KDT2_API ACoinGameStateBase : public AGameStateBase
 {
@@ -17,13 +17,14 @@ class KDT2_API ACoinGameStateBase : public AGameStateBase
 public:
 	ACoinGameStateBase();
 	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	void GetCoin(const struct FCoinDataTableRow* InCoinDataTableRow);
-	uint32 GetRemainCoinNum() const { return RemainCoinNum; };
+	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	void GetCoin(const FCoinDataTableRow* InCoinDataTableRow);
+	uint32 GetRemainCoinNum() const { return RemainCoinNum; }
 
 private:
-	TSubclassOf<class UCoinInfoUserWidget> CoinWidgetClass;
-	UCoinInfoUserWidget* CoinInfoWidget = nullptr;
+	TSubclassOf<UCoinInfoUserWidget> CoinWidgetClass;
+	UCoinInfoUserWidget* CoinInfoWidget;
 	uint32 RemainCoinNum = 0;
 
 	FTimerHandle LevelTransitionTimerHandle;

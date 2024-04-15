@@ -7,9 +7,6 @@
 #include "InputAction.h"
 #include "BasicInputDataConfig.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class KDT2_API UBasicInputDataConfig : public UObject
 {

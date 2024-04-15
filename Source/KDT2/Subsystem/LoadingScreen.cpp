@@ -30,7 +30,7 @@ void ULoadingScreenSubsystem::OnPreLoadMap(const FString& MapName)
 		LoadingScreen.MinimumLoadingScreenDisplayTime = 1.f;
 		//LoadingScreen.bAllowEngineTick = true;
 		//LoadingScreen.WidgetLoadingScreen = Widget->TakeWidget();
-		LoadingScreen.WidgetLoadingScreen = FLoadingScreenAttributes::NewTestLoadingScreenWidget();;
+		LoadingScreen.WidgetLoadingScreen = FLoadingScreenAttributes::NewTestLoadingScreenWidget();
 		GetMoviePlayer()->SetupLoadingScreen(LoadingScreen);
 	}
 	//else

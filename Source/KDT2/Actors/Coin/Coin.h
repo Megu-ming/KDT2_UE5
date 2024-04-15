@@ -56,7 +56,7 @@ protected:
 
 	UPROPERTY()
 	FDataTableRowHandle CoinDataTableRowHandle;
-
+	
 	FTimerHandle CoinDestroyTimerHandle;
 
 protected:
@@ -64,7 +64,7 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	double RotationSpeed = 45.0;
-
+	
 	UPROPERTY(EditAnywhere)
 	USoundBase* CoinSound;
 };

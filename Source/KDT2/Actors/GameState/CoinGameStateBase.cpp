@@ -8,7 +8,9 @@
 
 ACoinGameStateBase::ACoinGameStateBase()
 {
-	static ConstructorHelpers::FClassFinder<UCoinInfoUserWidget> FindClass(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/KDT2/Blueprint/Coin/UI_CoinInfo.UI_CoinInfo_C'"));
+	static ConstructorHelpers::FClassFinder<UCoinInfoUserWidget> FindClass
+	{TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/KDT2/Blueprint/Coin/UI_CoinInfo.UI_CoinInfo_C'")};
+
 	ensure(FindClass.Class);
 	CoinWidgetClass = FindClass.Class;
 }
@@ -41,6 +43,7 @@ void ACoinGameStateBase::GetCoin(const FCoinDataTableRow* InCoinDataTableRow)
 			{
 				UGameplayStatics::OpenLevel(this, TEXT("LobbyMap"));
 			};
+
 		GetWorld()->GetTimerManager().SetTimer(LevelTransitionTimerHandle, TimerDelegate, 2.5f, false);
 	}
 }
